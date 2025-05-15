@@ -15,7 +15,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -29,15 +28,12 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.example.weatherapp2025.R
-import com.example.weatherapp2025.model.Daily
 import com.example.weatherapp2025.ui.theme.ColorGradient1
 import com.example.weatherapp2025.ui.theme.ColorGradient2
 import com.example.weatherapp2025.ui.theme.ColorGradient3
 import com.example.weatherapp2025.ui.theme.ColorTextSecondary
 import com.example.weatherapp2025.ui.theme.ColorTextSecondaryVariant
 import com.example.weatherapp2025.ui.theme.ColorWindForecast
-import java.util.Date
-import kotlin.math.roundToInt
 
 @Composable
 fun DailyForecast(
