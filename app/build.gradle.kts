@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.example.weatherapp2025"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.weatherapp2025"
@@ -66,4 +66,38 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    //Network Calls
+    implementation (libs.retrofit)
+    implementation (libs.gson)
+    implementation (libs.converter.gson)
+
+    implementation (libs.play.services.location)
+    implementation (libs.accompanist.permissions)
+    implementation (libs.androidx.lifecycle.runtime.compose)
+    implementation (libs.androidx.constraintlayout.compose)
+    implementation (libs.logging.interceptor)
+    implementation (libs.lottie)
+    implementation (libs.androidx.lifecycle.extensions)
+    // Coroutine Lifecycle Scopes
+    implementation (libs.androidx.lifecycle.viewmodel.ktx)
+    implementation (libs.androidx.lifecycle.runtime.ktx.v220)
+
+    implementation (libs.ui)
+    implementation (libs.androidx.material)
+    implementation (libs.androidx.runtime.livedata)
+    implementation (libs.androidx.lifecycle.viewmodel.compose)
+
+
+    // Hilt
+    implementation (libs.hilt.android)
+
+    implementation (libs.accompanist.permissions.v0250)
+
+
+
+
+
+
+
 }
