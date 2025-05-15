@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">WeatherApp2025</string>
+    <string name="weather_details_not_available">Weather details not available</string>
+    <string name="location_not_found">Location not found</string>
+    <string name="error_fetching_location">Error fetching location</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="feels_like">Feels like %1$s°</string>
+    <string name="refresh">Refresh</string>
+    <string name="error_fetching_locationw">Error fetching location</string>
+    <string name="location_not_founds">Location not found</string>
+    <string name="permission_deniedd">Permission denied</string>
+    <string name="error_fetching_locationd">Error fetching location</string>
+    <string name="location_not_foundw">Location not found</string>
+    <string name="permission_deniedc">Permission denied</string>
+    <string name="today">Today</string>
 </resources>

@@ -23,7 +23,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.weatherapp2025.R
 import com.example.weatherapp2025.ui.theme.ColorBackground
 import com.example.weatherapp2025.view.components.ActionBar
 import com.example.weatherapp2025.view.components.DailyForecast
@@ -45,12 +47,14 @@ fun WeatherScreen(cityName: String, viewModel: WeatherViewModel) {
     val forecastDescription = currentWeather?.weather?.firstOrNull()?.main ?: "N/A"
     val currentTemp = currentWeather?.main?.temp?.roundToInt()?.toString() ?: "--"
     val feelsLike = currentWeather?.main?.feelsLike?.roundToInt()?.toString() ?: "--"
-    val feelsLikeDesc = "Feels like $feelsLike°"
-    val formattedDate = currentWeather?.dt?.let { dateFormat.format(Date(it * 1000L)) } ?: "Today"
+    val feelsLikeDesc = stringResource(R.string.feels_like, feelsLike)
+    val formattedDate = currentWeather?.dt?.let { dateFormat.format(Date(it * 1000L)) } ?: stringResource(
+        R.string.today
+    )
 
-    val isError = cityName == "Permission denied" ||
-            cityName == "Location not found" ||
-            cityName == "Error fetching location" ||
+    val isError = cityName == stringResource(R.string.permission_denied) ||
+            cityName == stringResource(R.string.location_not_found) ||
+            cityName == stringResource(R.string.error_fetching_location) ||
             currentWeather == null
 
     val isLoading = isRefreshingState && !isError
@@ -81,7 +85,7 @@ fun WeatherScreen(cityName: String, viewModel: WeatherViewModel) {
                     }
                     isError -> {
                         Text(
-                            text = "Weather details not available",
+                            text = stringResource(R.string.weather_details_not_available),
                             color = Color.Red,
                             modifier = Modifier.align(Alignment.CenterHorizontally)
                         )
@@ -112,7 +116,7 @@ fun WeatherScreen(cityName: String, viewModel: WeatherViewModel) {
                     .height(48.dp)
             ) {
                 Text(
-                    text = "Refresh",
+                    text = stringResource(R.string.refresh),
                     color = Color.White
                 )
 

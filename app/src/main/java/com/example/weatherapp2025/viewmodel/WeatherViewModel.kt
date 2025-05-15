@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.weatherapp2025.R
 import com.example.weatherapp2025.model.Daily
 import com.example.weatherapp2025.model.WeatherResponse
 import com.example.weatherapp2025.network.RetrofitClient
@@ -40,7 +41,7 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
         )
 
         if (permission != PackageManager.PERMISSION_GRANTED) {
-            _cityName.value = "Permission denied"
+            _cityName.value = context.getString(R.string.permission_denied)
             return
         }
 
@@ -61,20 +62,20 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
                     }
                 }
             } else {
-                _cityName.value = "Location not found"
+                _cityName.value = context.getString(R.string.location_not_found)
                 _weatherData.value = null
                 _dailyForecast.value = null
                 _isRefreshing.value = false
             }
         }.addOnFailureListener {
-            _cityName.value = "Error fetching location"
+            _cityName.value = context.getString(R.string.error_fetching_location)
             _weatherData.value = null
             _dailyForecast.value = null
             _isRefreshing.value = false
         }
     }
 
-    private suspend fun fetchCurrentWeather(lat: String, lon: String) {
+    suspend fun fetchCurrentWeather(lat: String, lon: String) {
         try {
             val response = RetrofitClient.api.getWeatherByLocation(lat, lon)
             if (response.isSuccessful) {
@@ -117,7 +118,7 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
         )
 
         if (permission != PackageManager.PERMISSION_GRANTED) {
-            _cityName.value = "Permission denied"
+            _cityName.value = context.getString(R.string.permission_denied)
             _weatherData.value = null
             _dailyForecast.value = null
             _isRefreshing.value = false
@@ -136,17 +137,17 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
                         currentJob.await()
                         forecastJob.await()
                     } finally {
-                        _isRefreshing.value = false // 🔴 only hide after all done
+                        _isRefreshing.value = false
                     }
                 }
             } else {
-                _cityName.value = "Location not found"
+                _cityName.value = context.getString(R.string.location_not_found)
                 _weatherData.value = null
                 _dailyForecast.value = null
                 _isRefreshing.value = false
             }
         }.addOnFailureListener {
-            _cityName.value = "Error fetching location"
+            _cityName.value = context.getString(R.string.error_fetching_location)
             _weatherData.value = null
             _dailyForecast.value = null
             _isRefreshing.value = false
