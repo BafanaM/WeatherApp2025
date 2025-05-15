@@ -1,6 +1,5 @@
 package com.example.weatherapp2025.view
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,34 +9,25 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.example.weatherapp2025.model.Daily
 import com.example.weatherapp2025.ui.theme.ColorBackground
 import com.example.weatherapp2025.view.components.ActionBar
 import com.example.weatherapp2025.view.components.DailyForecast
 import com.example.weatherapp2025.viewmodel.WeatherViewModel
-import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -91,7 +81,7 @@ fun WeatherScreen(cityName: String, viewModel: WeatherViewModel) {
                     }
                     isError -> {
                         Text(
-                            text = "Weather not available",
+                            text = "Weather details not available",
                             color = Color.Red,
                             modifier = Modifier.align(Alignment.CenterHorizontally)
                         )
@@ -103,36 +93,36 @@ fun WeatherScreen(cityName: String, viewModel: WeatherViewModel) {
                             degree = currentTemp,
                             description = feelsLikeDesc
                         )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
                     }
                 }
 
                 Spacer(modifier = Modifier.height(100.dp))
             }
 
-            // Refresh Button at Bottom Center
-            IconButton(
+            Button(
                 onClick = { viewModel.refreshWeather(context) },
+                shape = RoundedCornerShape(50),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 24.dp)
-                    .size(64.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.primary,
-                        shape = CircleShape
-                    )
+                    .height(48.dp)
             ) {
+                Text(
+                    text = "Refresh",
+                    color = Color.White
+                )
+
                 if (isRefreshingState) {
+                    Spacer(modifier = Modifier.width(8.dp))
                     CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
+                        modifier = Modifier
+                            .size(18.dp),
                         strokeWidth = 2.dp,
                         color = Color.White
-                    )
-                } else {
-                    Icon(
-                        imageVector = Icons.Default.Refresh,
-                        contentDescription = "Refresh",
-                        tint = Color.White,
-                        modifier = Modifier.size(28.dp)
                     )
                 }
             }

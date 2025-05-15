@@ -47,6 +47,12 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    configurations.all {
+        resolutionStrategy {
+            force("androidx.appcompat:appcompat:1.4.2")
+        }
+    }
 }
 
 dependencies {
@@ -79,24 +85,24 @@ dependencies {
     implementation (libs.logging.interceptor)
     implementation (libs.lottie)
     implementation (libs.androidx.lifecycle.extensions)
+
     // Coroutine Lifecycle Scopes
     implementation (libs.androidx.lifecycle.viewmodel.ktx)
     implementation (libs.androidx.lifecycle.runtime.ktx.v220)
 
+    //UI
     implementation (libs.ui)
     implementation (libs.androidx.material)
     implementation (libs.androidx.runtime.livedata)
     implementation (libs.androidx.lifecycle.viewmodel.compose)
 
-
     // Hilt
     implementation (libs.hilt.android)
 
     implementation (libs.accompanist.permissions.v0250)
+    implementation (libs.coil.compose)
 
-
-
-
+    implementation(libs.androidx.appcompat)
 
 
 
