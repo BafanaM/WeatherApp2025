@@ -10,6 +10,12 @@ import androidx.compose.runtime.getValue
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.weatherapp2025.network.RetrofitClient
+import com.example.weatherapp2025.provider.DefaultLocationPermissionChecker
+import com.example.weatherapp2025.provider.DefaultLocationProvider
+import com.example.weatherapp2025.provider.DefaultStringProvider
+import com.example.weatherapp2025.provider.LocationPermissionChecker
+import com.example.weatherapp2025.provider.LocationProvider
+import com.example.weatherapp2025.provider.StringProvider
 import com.example.weatherapp2025.ui.theme.WeatherApp2025Theme
 import com.example.weatherapp2025.view.WeatherScreen
 import com.example.weatherapp2025.viewmodel.WeatherViewModel
@@ -19,6 +25,7 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var viewModel: WeatherViewModel
 
+    // Permission launcher
     private val locationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
@@ -32,10 +39,21 @@ class MainActivity : ComponentActivity() {
 
         RetrofitClient.init(applicationContext)
 
-        val factory = WeatherViewModelFactory(application)
+        val locationPermissionChecker: LocationPermissionChecker = DefaultLocationPermissionChecker()
+        val stringProvider: StringProvider = DefaultStringProvider(applicationContext)
+        val locationProvider: LocationProvider = DefaultLocationProvider(applicationContext)
+
+        val factory = WeatherViewModelFactory(
+            application,
+            locationPermissionChecker,
+            stringProvider,
+            locationProvider
+        )
+
         viewModel = ViewModelProvider(this, factory)[WeatherViewModel::class.java]
 
         enableEdgeToEdge()
+
         setContent {
             WeatherApp2025Theme {
                 val city by viewModel.cityName
@@ -46,6 +64,7 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+        // Check for location permission and request if necessary
         if (ContextCompat.checkSelfPermission(
                 this, android.Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED

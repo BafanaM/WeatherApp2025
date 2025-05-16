@@ -1,23 +1,28 @@
 package com.example.weatherapp2025.viewmodel
 
-import android.Manifest
 import android.app.Application
 import android.content.Context
-import android.content.pm.PackageManager
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp2025.R
 import com.example.weatherapp2025.model.Daily
 import com.example.weatherapp2025.model.WeatherResponse
 import com.example.weatherapp2025.network.RetrofitClient
-import com.google.android.gms.location.LocationServices
+import com.example.weatherapp2025.provider.LocationPermissionChecker
+import com.example.weatherapp2025.provider.LocationProvider
+import com.example.weatherapp2025.provider.StringProvider
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
-class WeatherViewModel(application: Application) : AndroidViewModel(application) {
+class WeatherViewModel(
+    private val application: Application,
+    private val locationPermissionChecker: LocationPermissionChecker,
+    private val stringProvider: StringProvider,
+    private val locationProvider: LocationProvider
+) : AndroidViewModel(application) {
+
 
     private val _cityName = mutableStateOf("Fetching city...")
     val cityName: State<String> = _cityName
@@ -31,48 +36,43 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
     private val _isRefreshing = mutableStateOf(false)
     val isRefreshing: State<Boolean> = _isRefreshing
 
-    private val fusedLocationClient by lazy {
-        LocationServices.getFusedLocationProviderClient(application)
-    }
-
     fun fetchCityName(context: Context) {
-        val permission = ContextCompat.checkSelfPermission(
-            context, Manifest.permission.ACCESS_FINE_LOCATION
-        )
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            _cityName.value = context.getString(R.string.permission_denied)
+        if (!locationPermissionChecker.isLocationPermissionGranted(context)) {
+            _cityName.value = stringProvider.getString(R.string.permission_denied)
             return
         }
 
-        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-            if (location != null) {
-                val lat = location.latitude.toString()
-                val lon = location.longitude.toString()
+        locationProvider.getLastLocation(
+            onSuccess = { location ->
+                if (location != null) {
+                    val lat = location.latitude.toString()
+                    val lon = location.longitude.toString()
 
-                viewModelScope.launch {
-                    try {
-                        _isRefreshing.value = true
-                        val currentJob = async { fetchCurrentWeather(lat, lon) }
-                        val forecastJob = async { fetchForecast(lat, lon) }
-                        currentJob.await()
-                        forecastJob.await()
-                    } finally {
-                        _isRefreshing.value = false
+                    viewModelScope.launch {
+                        try {
+                            _isRefreshing.value = true
+                            val currentJob = async { fetchCurrentWeather(lat, lon) }
+                            val forecastJob = async { fetchForecast(lat, lon) }
+                            currentJob.await()
+                            forecastJob.await()
+                        } finally {
+                            _isRefreshing.value = false
+                        }
                     }
+                } else {
+                    _cityName.value = stringProvider.getString(R.string.location_not_found)
+                    _weatherData.value = null
+                    _dailyForecast.value = null
+                    _isRefreshing.value = false
                 }
-            } else {
-                _cityName.value = context.getString(R.string.location_not_found)
+            },
+            onFailure = {
+                _cityName.value = stringProvider.getString(R.string.error_fetching_location)
                 _weatherData.value = null
                 _dailyForecast.value = null
                 _isRefreshing.value = false
             }
-        }.addOnFailureListener {
-            _cityName.value = context.getString(R.string.error_fetching_location)
-            _weatherData.value = null
-            _dailyForecast.value = null
-            _isRefreshing.value = false
-        }
+        )
     }
 
     suspend fun fetchCurrentWeather(lat: String, lon: String) {
@@ -113,44 +113,43 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
     fun refreshWeather(context: Context) {
         _isRefreshing.value = true
 
-        val permission = ContextCompat.checkSelfPermission(
-            context, Manifest.permission.ACCESS_FINE_LOCATION
-        )
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            _cityName.value = context.getString(R.string.permission_denied)
+        if (!locationPermissionChecker.isLocationPermissionGranted(context)) {
+            _cityName.value = stringProvider.getString(R.string.permission_denied)
             _weatherData.value = null
             _dailyForecast.value = null
             _isRefreshing.value = false
             return
         }
 
-        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-            if (location != null) {
-                val lat = location.latitude.toString()
-                val lon = location.longitude.toString()
+        locationProvider.getLastLocation(
+            onSuccess = { location ->
+                if (location != null) {
+                    val lat = location.latitude.toString()
+                    val lon = location.longitude.toString()
 
-                viewModelScope.launch {
-                    try {
-                        val currentJob = async { fetchCurrentWeather(lat, lon) }
-                        val forecastJob = async { fetchForecast(lat, lon) }
-                        currentJob.await()
-                        forecastJob.await()
-                    } finally {
-                        _isRefreshing.value = false
+                    viewModelScope.launch {
+                        try {
+                            val currentJob = async { fetchCurrentWeather(lat, lon) }
+                            val forecastJob = async { fetchForecast(lat, lon) }
+                            currentJob.await()
+                            forecastJob.await()
+                        } finally {
+                            _isRefreshing.value = false
+                        }
                     }
+                } else {
+                    _cityName.value = stringProvider.getString(R.string.location_not_found)
+                    _weatherData.value = null
+                    _dailyForecast.value = null
+                    _isRefreshing.value = false
                 }
-            } else {
-                _cityName.value = context.getString(R.string.location_not_found)
+            },
+            onFailure = {
+                _cityName.value = stringProvider.getString(R.string.error_fetching_location)
                 _weatherData.value = null
                 _dailyForecast.value = null
                 _isRefreshing.value = false
             }
-        }.addOnFailureListener {
-            _cityName.value = context.getString(R.string.error_fetching_location)
-            _weatherData.value = null
-            _dailyForecast.value = null
-            _isRefreshing.value = false
-        }
+        )
     }
 }

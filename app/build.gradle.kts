@@ -65,6 +65,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.junit.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -114,10 +115,6 @@ dependencies {
     testImplementation ("com.squareup.okhttp3:mockwebserver:4.10.0")
     androidTestImplementation ("androidx.test:core:1.5.0")
     testImplementation ("androidx.test:core:1.5.0")
-
-
-
-
-
-
+    androidTestImplementation ("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation ("androidx.test:runner:1.5.2")
 }
