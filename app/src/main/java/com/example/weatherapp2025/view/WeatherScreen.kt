@@ -29,6 +29,7 @@ import com.example.weatherapp2025.R
 import com.example.weatherapp2025.ui.theme.ColorBackground
 import com.example.weatherapp2025.view.components.ActionBar
 import com.example.weatherapp2025.view.components.DailyForecast
+import com.example.weatherapp2025.view.components.ErrorLayout
 import com.example.weatherapp2025.viewmodel.WeatherViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -85,10 +86,8 @@ fun WeatherScreen(cityName: String, viewModel: WeatherViewModel) {
                         )
                     }
                     isError -> {
-                        Text(
-                            text = stringResource(R.string.weather_details_not_available),
-                            color = Color.Red,
-                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        ErrorLayout(
+                            message = stringResource(R.string.weather_details_not_available)
                         )
                     }
                     else -> {
