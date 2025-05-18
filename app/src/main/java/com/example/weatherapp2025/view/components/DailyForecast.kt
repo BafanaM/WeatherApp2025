@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import coil.compose.rememberImagePainter
 import com.example.weatherapp2025.R
 import com.example.weatherapp2025.ui.theme.ColorGradient1
 import com.example.weatherapp2025.ui.theme.ColorGradient2
@@ -41,7 +42,8 @@ fun DailyForecast(
     forecast: String,
     date: String,
     degree: String,
-    description: String
+    description: String,
+    iconCode: String
 ) {
     ConstraintLayout(
         modifier = modifier.fillMaxWidth()
@@ -61,18 +63,12 @@ fun DailyForecast(
             }
         )
 
-        val imageResource = when {
-            forecast.contains("clouds", ignoreCase = true) -> R.drawable.img_cloudy
-            forecast.contains("clear", ignoreCase = true) -> R.drawable.img_sun
-            forecast.contains("rain", ignoreCase = true) -> R.drawable.img_rain
-            else -> R.drawable.img_sub_rain
-        }
+        val imageUrl = "https://openweathermap.org/img/wn/$iconCode@2x.png"
 
-        Log.i("WeatherDescription: ", description)
-
+        // Loading image using Coil
         Image(
-            painter = painterResource(id = imageResource),
-            contentDescription = null,
+            painter = rememberImagePainter(imageUrl),
+            contentDescription = "Weather Icon",
             contentScale = ContentScale.FillHeight,
             modifier = Modifier
                 .height(175.dp)

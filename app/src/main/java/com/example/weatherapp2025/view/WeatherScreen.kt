@@ -48,6 +48,7 @@ fun WeatherScreen(cityName: String, viewModel: WeatherViewModel) {
     val currentTemp = currentWeather?.main?.temp?.roundToInt()?.toString() ?: "--"
     val feelsLike = currentWeather?.main?.feelsLike?.roundToInt()?.toString() ?: "--"
     val feelsLikeDesc = stringResource(R.string.feels_like, feelsLike)
+    val iconCode = currentWeather?.weather?.firstOrNull()?.icon ?: "01d"
     val formattedDate = currentWeather?.dt?.let { dateFormat.format(Date(it * 1000L)) } ?: stringResource(
         R.string.today
     )
@@ -95,11 +96,11 @@ fun WeatherScreen(cityName: String, viewModel: WeatherViewModel) {
                             forecast = forecastDescription,
                             date = formattedDate,
                             degree = currentTemp,
-                            description = feelsLikeDesc
+                            description = feelsLikeDesc,
+                            iconCode = iconCode
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
-
                     }
                 }
 
